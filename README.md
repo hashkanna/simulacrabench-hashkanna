@@ -32,8 +32,10 @@ of it; Appendix A of the report lists every setting.
 cd submission && zip -r ../submission.zip .
 ```
 
-This packs the same five files as the uploaded archive. A zip made today differs from the uploaded
-one in its container bytes (timestamps, compressor), so compare the files, not the archives:
+From a clean checkout this packs the same five files as the uploaded archive (an in-process run
+with `experiments/evaluate.py` leaves a `__pycache__` folder in `submission/`; delete it first). A
+zip made today differs from the uploaded one in its container bytes (timestamps, compressor), so
+compare the files, not the archives:
 
 ```bash
 sha256sum -c SHA256SUMS        # macOS: shasum -a 256 -c SHA256SUMS
@@ -106,6 +108,26 @@ Things to know about a local run:
   of them.
 - The time budget assumes an H100. On a slower GPU the planner uses fewer TabPFN ensemble members
   (8, 4, 2 or 1), so the forecasts can differ slightly from an H100 run. Seeds are fixed.
+
+## What was checked
+
+On 17 November 2026 the files of this repository were run with the kit (commit `5c69e17`) on an
+aarch64 Linux machine with one NVIDIA GB10 GPU, shared with another job:
+
+- A zip made with the command above passes the kit's `tools/check_submission_zip.py`, and
+  `sha256sum -c SHA256SUMS` passes.
+- The download in step 1 gives a checkpoint with the SHA-256 listed below.
+- `score.py --phase 2` passes on UNICEF, World Bank and UNHCR sandbox data in the environment
+  that the kit builds from `requirements.txt` (there: Python 3.12, PyTorch 2.15.0 with CUDA,
+  `tabpfn` 9.1.0). The runs took 11, 9 and 23 minutes, environment build included.
+- Without `requirements.txt`, in an environment with PyTorch 2.13.0, `--phase 2` and `--phase 1`
+  pass on UNICEF. The `--phase 2` run prints the same sandbox skill as the run in the built
+  environment, to four decimals.
+- `experiments/evaluate.py` with `SIMULACRA_VERBOSE=1` prints the planner's log. On that GPU the
+  planner chose four ensemble members for UNICEF, not the eight of the H100 timing runs.
+
+The files have not been run again on an H100. The platform's run of the same five files is the
+leaderboard entry above.
 
 ## Environment
 
