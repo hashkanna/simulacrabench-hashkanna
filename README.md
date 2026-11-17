@@ -24,7 +24,7 @@ of it; Appendix A of the report lists every setting.
 | `archive/claude-v5k-slim-dev.zip` | The archive exactly as it was uploaded. |
 | `SHA256SUMS` | SHA-256 of the five files and of the archive. |
 | `experiments/` | Scripts behind the offline proxy experiments and timing runs (Appendix B of the report). See `experiments/README.md`. |
-| `paper/` | The technical report: LaTeX source and PDF. |
+| `paper/` | The technical report: `report.pdf` and its LaTeX source. Building it needs `neurips_2026.sty` from the NeurIPS 2026 formatting instructions beside `report.tex`; that file is not copied here. |
 
 ## Rebuilding the submission archive
 
